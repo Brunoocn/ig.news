@@ -5,13 +5,15 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
     "@prismicio/client": "^6.1.0",
     "@stripe/stripe-js": "^1.22.0",
     "axios": "^0.24.0",
     "faunadb": "^4.4.1",
+    "identity-obj-proxy": "^3.0.0",
     "next": "12.0.3",
     "next-auth": "3.29.0",
     "prismic-dom": "^2.2.7",
