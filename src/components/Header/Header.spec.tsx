@@ -1,4 +1,4 @@
-import { screen, render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { Header } from ".";
 
 jest.mock("next/router", () => {
@@ -10,7 +10,6 @@ jest.mock("next/router", () => {
     },
   };
 });
-
 jest.mock("next-auth/client", () => {
   return {
     useSession() {
@@ -19,7 +18,7 @@ jest.mock("next-auth/client", () => {
   };
 });
 
-describe("ActiveLink", () => {
+describe("Header component", () => {
   it("renders correctly", () => {
     render(<Header />);
 
