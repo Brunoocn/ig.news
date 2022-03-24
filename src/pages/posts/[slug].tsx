@@ -1,10 +1,9 @@
 import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/client";
-import { getPrismicClient } from "../../services/prismic";
-import { RichText } from "prismic-dom";
 import Head from "next/head";
-
-import styles from './post.module.scss';
+import { getSession } from "next-auth/client";
+import { RichText } from "prismic-dom";
+import { getPrismicClient } from "../../services/prismic";
+import styles from "./post.module.scss";
 
 interface PostProps {
   post: {
@@ -12,11 +11,11 @@ interface PostProps {
     title: string;
     content: string;
     updatedAt: string;
-  }
+  };
 }
 
 export default function Post({ post }: PostProps) {
-  return(
+  return (
     <>
       <Head>
         <title>{post.title} | Ignews</title>
@@ -26,28 +25,35 @@ export default function Post({ post }: PostProps) {
         <article className={styles.post}>
           <h1>{post.title}</h1>
           <time>{post.updatedAt}</time>
-          <div className={styles.postContent} dangerouslySetInnerHTML={{ __html: post.content }} />
+          <div
+            className={styles.postContent}
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
         </article>
       </main>
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, params }) => {
-  const session = await getSession({ req })
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  params,
+}) => {
+  const session = await getSession({ req });
   const { slug } = params;
 
-  if(!session?.activeSubscription) {
+  if (!session?.activeSubscription) {
     return {
       redirect: {
-        destination: '/',
+        destination: `/posts/preview/${slug}`,
         permanent: false,
-      }
-    }
+      },
+    };
   }
 
-  const prismic = getPrismicClient(req)
-  const response = await prismic.getByUID('publication', String(slug), {})
+  const prismic = getPrismicClient(req);
+
+  const response = await prismic.getByUID("publication", String(slug), {});
 
   const post = {
     slug,
@@ -63,9 +69,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
     ),
   };
 
-  return{
+  return {
     props: {
       post,
-    }
-  }
-}
+    },
+  };
+};
