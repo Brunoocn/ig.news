@@ -1,13 +1,12 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import Link from "next/link";
-import { getPrismicClient } from "../../../services/prismic";
-import { RichText } from "prismic-dom";
-import Head from "next/head";
-
-import styles from "../post.module.scss";
 import { useSession } from "next-auth/client";
+import { useRouter } from "next/router";
+import Head from "next/head";
+import Link from "next/link";
+import { RichText } from "prismic-dom";
 import { useEffect } from "react";
-import router from "next/router";
+import { getPrismicClient } from "../../../services/prismic";
+import styles from "../post.module.scss";
 
 interface PostPreviewProps {
   post: {
@@ -20,13 +19,13 @@ interface PostPreviewProps {
 
 export default function PostPreview({ post }: PostPreviewProps) {
   const [session] = useSession();
+  const router = useRouter();
 
   useEffect(() => {
-    if(session?.activeSubscription) {
-      router.push(`/post/${post.slug}`)
+    if (session?.activeSubscription) {
+      router.push(`/posts/${post.slug}`);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session])
+  }, [session]);
 
   return (
     <>
@@ -42,10 +41,11 @@ export default function PostPreview({ post }: PostPreviewProps) {
             className={`${styles.postContent} ${styles.previewContent}`}
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
+
           <div className={styles.continueReading}>
             Wanna continue reading?
             <Link href="/">
-              <a href="">Subscribe now🤗</a>
+              <a>Subscribe now 🤗</a>
             </Link>
           </div>
         </article>
@@ -65,6 +65,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { slug } = params;
 
   const prismic = getPrismicClient();
+
   const response = await prismic.getByUID("publication", String(slug), {});
 
   const post = {
@@ -85,6 +86,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       post,
     },
-    revalidate: 60 * 30, //30 minutes
+    revalidate: 60 * 30, // 30 minutes
   };
 };
